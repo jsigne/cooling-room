@@ -21,6 +21,5 @@ public class Alert {
     private Boolean isAlert;
     private Boolean isWarning;
     private Double temperature;
-    private Double consumption;
-    private LocalDateTime messageDate;
+    private LocalDateTime alertDate;
 }

@@ -19,8 +19,6 @@ public class AlertParser {
                 coolingMatcher.group("temperature")));
         alert.setIdRoom(Integer.parseInt(
                 coolingMatcher.group("idRoom")));
-        alert.setConsumption(Double.parseDouble(
-                coolingMatcher.group("consumption")));
         return alert;
     }
 }
