@@ -1,7 +1,7 @@
-package com.example.cold_room.processor;
+package com.example.cold_room.scancooling;
 
-import com.example.cold_room.CoolingRepository;
 import com.example.cold_room.model.Cooling;
+import com.example.cold_room.repository.CoolingRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;

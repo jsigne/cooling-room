@@ -1,4 +1,4 @@
-package com.example.cold_room;
+package com.example.cold_room.scanalert;
 
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;

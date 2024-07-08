@@ -1,4 +1,4 @@
-package com.example.cold_room;
+package com.example.cold_room.repository;
 
 import com.example.cold_room.model.Cooling;
 import org.springframework.data.jpa.repository.JpaRepository;

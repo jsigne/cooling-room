@@ -1,4 +1,4 @@
-package com.example.cold_room.processor;
+package com.example.cold_room.scancooling;
 
 import com.example.cold_room.model.Cooling;
 import org.springframework.stereotype.Component;
