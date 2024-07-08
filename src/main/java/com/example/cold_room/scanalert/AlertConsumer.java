@@ -14,8 +14,17 @@ class AlertConsumer {
 
     private final AlertParser alertParser;
 
-    @KafkaListener(topics= {"alert-topic", "warning-topic"}, groupId="spring-boot-kafka")
-    public void consume(String alertMessage) {
+    @KafkaListener(topics= {"alert-topic"}, groupId="spring-boot-kafka")
+    public void consumeAlert(String alertMessage) {
         Alert alert = alertParser.parse(alertMessage);
+        alert.setIsAlert(true);
+        alertRepository.save(alert);
+    }
+
+    @KafkaListener(topics= {"warning-topic"}, groupId="spring-boot-kafka")
+    public void consumeWarning(String alertMessage) {
+        Alert alert = alertParser.parse(alertMessage);
+        alert.setIsWarning(true);
+        alertRepository.save(alert);
     }
 }
