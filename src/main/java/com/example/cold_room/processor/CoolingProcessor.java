@@ -19,14 +19,17 @@ public class CoolingProcessor {
 
     private final CoolingRepository repository;
 
+    private final CoolingParser coolingParser;
+
     @Autowired
     void process(StreamsBuilder streamsBuilder) {
-        KStream<String, String> messageStream = streamsBuilder
+        KStream<String, String> coolingMessageStream = streamsBuilder
                 .stream("cooling-room-topic", Consumed.with(STRING_SERDE, STRING_SERDE));
-        messageStream.foreach((k,v) -> {
-            System.out.printf("%s%n",v);
-            Cooling c = new Cooling();
-            repository.save(c);
+
+        KStream<String, Cooling> coolingStream = coolingMessageStream.map((k, v) -> {
+            Cooling cooling = coolingParser.parse(v);
+            repository.save(cooling);
+            return KeyValue.pair(cooling.getIdRoom().toString(), cooling);
         });
         messageStream.to("alert-topic", Produced.with(STRING_SERDE, STRING_SERDE));
     }
