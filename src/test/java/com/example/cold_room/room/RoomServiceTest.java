@@ -26,7 +26,7 @@ class RoomServiceTest {
 
         LocalDateTime day1 = LocalDateTime.now();
         LocalDateTime day2 = day1.minusDays(1);
-        when(repository.getTemperaturesById(1))
+        when(repository.getTemperaturesByIdRoom(1))
                 .thenReturn(List.of(
                         new RoomTemperature(1,-40., day1),
                         new RoomTemperature(1, -30., day1),
@@ -39,6 +39,26 @@ class RoomServiceTest {
         List<RoomTemperature> actualTempAvgs = roomService.dailyAverageTemperatureByIdRoom(1);
 
         assertThat(actualTempAvgs).usingRecursiveComparison().isEqualTo(expected);
+    }
+
+    @Test
+    void averageConsumptionByDay_shouldReturnAverageConsumption_whenExistingRoomId(){
+
+        LocalDateTime day1 = LocalDateTime.now();
+        LocalDateTime day2 = day1.minusDays(1);
+        when(repository.getConsumptionsByIdRoom(1))
+                .thenReturn(List.of(
+                        new RoomConsumption(1,10., day1),
+                        new RoomConsumption(1, 6., day1),
+                        new RoomConsumption(1, 12., day2)));
+
+        List<RoomConsumption> expected = List.of(
+                new RoomConsumption(1,8., day1),
+                new RoomConsumption(1, 12., day2));
+
+        List<RoomConsumption> actualConsumptionAverage = roomService.dailyAverageConsumptionByIdRoom(1);
+
+        assertThat(actualConsumptionAverage).usingRecursiveComparison().isEqualTo(expected);
     }
 
 }

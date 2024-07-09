@@ -17,5 +17,9 @@ public class RoomController {
     public List<RoomTemperature> getDailyAverageTemperature(@PathVariable Integer idRoom){
         return roomService.dailyAverageTemperatureByIdRoom(idRoom);
     }
+    @GetMapping("/rooms/{idRoom}/consumption/average")
+    public List<RoomConsumption> getDailyAverageConsumption(@PathVariable Integer idRoom){
+        return roomService.dailyAverageConsumptionByIdRoom(idRoom);
+    }
 
 }

@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class RoomTemperatureResponse {
+public class RoomConsumption {
     private Integer idRoom;
-    private Double temperature;
-    private LocalDate date;
+    private Double consumption;
+    private LocalDateTime day;
 }
+

@@ -1,7 +1,6 @@
 package com.example.cold_room.room;
 
 import com.example.cold_room.repository.CoolingRepository;
-import com.example.cold_room.room.response.RoomConsumptionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ public class RoomService {
     private final CoolingRepository coolingRepository;
 
     public List<RoomTemperature> dailyAverageTemperatureByIdRoom(Integer id){
-        List<RoomTemperature> roomTemperatures = coolingRepository.getTemperaturesById(id);
+        List<RoomTemperature> roomTemperatures = coolingRepository.getTemperaturesByIdRoom(id);
 
         Map<LocalDate, List<RoomTemperature>> roomTemperaturesByDay = roomTemperatures.stream()
                 .filter(roomTemperature-> roomTemperature.getDay() != null && roomTemperature.getTemperature() != null)
@@ -35,16 +34,20 @@ public class RoomService {
         return roomTemperatureAverageByDay;
     }
 
-    public List<RoomConsumptionResponse> averageConsumptionByDay(Integer id){
-        List<RoomConsumption> roomTemperatures = coolingRepository.consumptions(id);
+    public List<RoomConsumption> dailyAverageConsumptionByIdRoom(Integer id){
+        List<RoomConsumption> roomTemperatures = coolingRepository.getConsumptionsByIdRoom(id);
 
-        List<RoomTemperatureResponse> roomTemperatureAverageByDay = new ArrayList<>();
-        roomTemperaturesByDay.forEach((day,temperaturesOfDay) ->
-            temperaturesOfDay.stream()
-                    .mapToDouble(RoomTemperature::getTemperature)
-                    .average().ifPresent(avg -> new RoomTemperatureResponse(id, avg, day ))
+        Map<LocalDate, List<RoomConsumption>> roomConsumptionByDay = roomTemperatures.stream()
+                .filter(consumption-> consumption.getDay() != null && consumption.getConsumption() != null)
+                .collect(groupingBy(r -> r.getDay().toLocalDate()));
+
+        List<RoomConsumption> roomConsumptionAverageByDay = new ArrayList<>();
+        roomConsumptionByDay.forEach((day,consumptionsOfDay) ->
+            consumptionsOfDay.stream()
+                    .mapToDouble(RoomConsumption::getConsumption)
+                    .average().ifPresent(avg -> roomConsumptionAverageByDay.add(new RoomConsumption(id, avg, consumptionsOfDay.getFirst().getDay())))
         );
 
-        return roomTemperatureAverageByDay;
+        return roomConsumptionAverageByDay;
     }
 }
