@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface CoolingRepository extends JpaRepository<Cooling, Integer> {
 
-    @Query("SELECT c.idRoom as idRoom, c.temperature as temperature FROM Cooling c WHERE c.idRoom = :idRoom" )
+    @Query("SELECT c.idRoom as idRoom, c.temperature as temperature, c.messageDate as messageDate FROM Cooling c WHERE c.idRoom = :idRoom")
     List<RoomTemperature> avgTemp(Integer idRoom);
 }

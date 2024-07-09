@@ -15,7 +15,7 @@ public class RoomController {
 
     @GetMapping("/rooms/{idRoom}/temperature/average")
     public List<RoomTemperature> getDailyAverageTemperature(@PathVariable Integer idRoom){
-        return roomService.avergetemperture(idRoom);
+        return roomService.dailyAverageTemperatureByIdRoom(idRoom);
     }
 
 }

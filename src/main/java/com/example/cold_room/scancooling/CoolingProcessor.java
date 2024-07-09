@@ -11,6 +11,8 @@ import org.apache.kafka.streams.kstream.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 
 @Component
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ public class CoolingProcessor {
 
         KStream<String, Cooling> coolingStream = coolingMessageStream.map((k, v) -> {
             Cooling cooling = coolingParser.parse(v);
+            cooling.setMessageDate(LocalDateTime.now());
             repository.save(cooling);
             return KeyValue.pair(cooling.getIdRoom().toString(), cooling);
         });
