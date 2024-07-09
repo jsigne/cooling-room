@@ -20,7 +20,7 @@ public interface CoolingRepository extends JpaRepository<Cooling, Integer> {
     List<RoomConsumption> getConsumptionsByIdRoom(Integer idRoom);
 
     @Query("""
-            SELECT new com.example.cold_room.room.response.RoomResponse(cooling.idRoom, cooling.isCooling, cooling.temperature, cooling.consumption, cooling.messageDate, alert.isAlert, alert.isWarning)
+            SELECT new com.example.cold_room.room.response.Room(cooling.idRoom, cooling.isCooling, cooling.temperature, cooling.consumption, cooling.messageDate, alert.isAlert, alert.isWarning)
             FROM Cooling cooling
             FULL JOIN Alert alert
             ON alert.idRoom = cooling.idRoom
