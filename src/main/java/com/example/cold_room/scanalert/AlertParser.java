@@ -3,6 +3,7 @@ package com.example.cold_room.scanalert;
 import com.example.cold_room.model.Alert;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +20,9 @@ public class AlertParser {
                 coolingMatcher.group("temperature")));
         alert.setIdRoom(Integer.parseInt(
                 coolingMatcher.group("idRoom")));
+        alert.setAlertDate(LocalDateTime.parse(
+                coolingMatcher.group("timestamp")
+        ));
         return alert;
     }
 }

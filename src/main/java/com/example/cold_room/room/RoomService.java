@@ -1,6 +1,7 @@
 package com.example.cold_room.room;
 
 import com.example.cold_room.repository.CoolingRepository;
+import com.example.cold_room.room.response.Room;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,11 @@ import static java.util.stream.Collectors.groupingBy;
 public class RoomService {
 
     private final CoolingRepository coolingRepository;
+
+
+    public List<Room> getRooms(){
+        return coolingRepository.getAllLastEntry();
+    }
 
     public List<RoomTemperature> dailyAverageTemperatureByIdRoom(Integer id){
         List<RoomTemperature> roomTemperatures = coolingRepository.getTemperaturesByIdRoom(id);

@@ -1,6 +1,7 @@
 package com.example.cold_room.room;
 
 import com.example.cold_room.repository.CoolingRepository;
+import com.example.cold_room.room.response.Room;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,6 +21,20 @@ class RoomServiceTest {
     private RoomService roomService;
     @Mock
     CoolingRepository repository;
+
+    @Test
+    void getRooms_shouldReturnRoomLastData(){
+        List<Room> expected = List.of(
+                new Room(1, true, -35., 10., LocalDateTime.now(), null, true),
+                new Room(2, true, -21., 10., LocalDateTime.now(), true, null)
+        );
+        when(repository.getAllLastEntry())
+                .thenReturn(expected);
+
+        List<Room> actual = roomService.getRooms();
+
+        assertThat(actual).isEqualTo(expected);
+    }
 
     @Test
     void averageTemperatureByDay_shouldReturnAverageTemperature_whenExistingRoomId(){
