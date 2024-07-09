@@ -29,4 +29,15 @@ public interface CoolingRepository extends JpaRepository<Cooling, Integer> {
             (SELECT max(cooling.messageDate) FROM Cooling cooling GROUP BY cooling.idRoom)
             """)
     List<Room> getAllLastEntry();
+
+    @Query("""
+            SELECT cooling
+            FROM Cooling cooling
+            INNER JOIN Alert alert
+            ON alert.idRoom = cooling.idRoom
+            AND alert.alertDate = cooling.messageDate
+            WHERE cooling.messageDate in
+            (SELECT max(cooling.messageDate) FROM Cooling cooling GROUP BY cooling.idRoom)
+            """)
+    List<Cooling> getAllLastEntryInAlert();
 }

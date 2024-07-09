@@ -1,5 +1,6 @@
 package com.example.cold_room.room;
 
+import com.example.cold_room.model.Cooling;
 import com.example.cold_room.repository.CoolingRepository;
 import com.example.cold_room.room.response.Room;
 import org.junit.jupiter.api.Test;
@@ -32,6 +33,20 @@ class RoomServiceTest {
                 .thenReturn(expected);
 
         List<Room> actual = roomService.getRooms();
+
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void getAlertRooms_shouldReturnRoomLastData(){
+        List<Cooling> expected = List.of(
+                new Cooling(1,1, true, -35., 10., LocalDateTime.now()),
+                new Cooling(2,2, true, -21., 10., LocalDateTime.now())
+        );
+        when(repository.getAllLastEntryInAlert())
+                .thenReturn(expected);
+
+        List<Cooling> actual = roomService.getAlertRooms();
 
         assertThat(actual).isEqualTo(expected);
     }

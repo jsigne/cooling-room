@@ -1,5 +1,6 @@
 package com.example.cold_room.room;
 
+import com.example.cold_room.model.Cooling;
 import com.example.cold_room.room.response.Room;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,11 @@ public class RoomController {
     @GetMapping("/rooms")
     public List<Room> rooms(){
         return roomService.getRooms();
+    }
+
+    @GetMapping("/roomalert")
+    public List<Cooling> roomAlert(){
+        return roomService.getAlertRooms();
     }
 
     @GetMapping("/rooms/{idRoom}/temperature/average")

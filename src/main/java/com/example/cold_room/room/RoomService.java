@@ -1,5 +1,6 @@
 package com.example.cold_room.room;
 
+import com.example.cold_room.model.Cooling;
 import com.example.cold_room.repository.CoolingRepository;
 import com.example.cold_room.room.response.Room;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,10 @@ public class RoomService {
 
     public List<Room> getRooms(){
         return coolingRepository.getAllLastEntry();
+    }
+
+    public List<Cooling> getAlertRooms(){
+        return coolingRepository.getAllLastEntryInAlert();
     }
 
     public List<RoomTemperature> dailyAverageTemperatureByIdRoom(Integer id){
