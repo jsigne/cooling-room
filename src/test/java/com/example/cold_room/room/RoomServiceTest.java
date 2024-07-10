@@ -1,12 +1,16 @@
 package com.example.cold_room.room;
 
 import com.example.cold_room.model.Cooling;
+import com.example.cold_room.model.Room;
+import com.example.cold_room.model.RoomConsumption;
+import com.example.cold_room.model.RoomTemperature;
 import com.example.cold_room.repository.CoolingRepository;
-import com.example.cold_room.room.response.Room;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -38,17 +42,30 @@ class RoomServiceTest {
     }
 
     @Test
-    void getAlertRooms_shouldReturnRoomLastData(){
+    void getAlertRooms_shouldReturnRoomLastData() {
+        // Given
+        String instantExpected = "2022-03-14T09:33:52";
+        LocalDateTime localDateTime = LocalDateTime.parse(instantExpected);
+
         List<Cooling> expected = List.of(
-                new Cooling(1,1, true, -35., 10., LocalDateTime.now()),
-                new Cooling(2,2, true, -21., 10., LocalDateTime.now())
+                new Cooling(1, 1, true, -35., 10., localDateTime),
+                new Cooling(2, 1, true, -21., 10., localDateTime)
         );
-        when(repository.getAllLastEntryInAlert())
-                .thenReturn(expected);
 
-        List<Cooling> actual = roomService.getAlertRooms();
+        when(repository.getRoomIdsInAlert()).thenReturn(List.of(1));
 
-        assertThat(actual).isEqualTo(expected);
+
+        try (MockedStatic<LocalDateTime> mockedLocalDateTime = Mockito.mockStatic(LocalDateTime.class)) {
+            mockedLocalDateTime.when(LocalDateTime::now).thenReturn(localDateTime);
+
+            when(repository.getByRoomIdsSince(List.of(1), localDateTime.minusHours(5)))
+                    .thenReturn(expected);
+            // When
+            List<Cooling> actual = roomService.getAlertRooms();
+
+            // Then
+            assertThat(actual).isEqualTo(expected);
+        }
     }
 
     @Test
@@ -72,23 +89,38 @@ class RoomServiceTest {
     }
 
     @Test
-    void averageConsumptionByDay_shouldReturnAverageConsumption_whenExistingRoomId(){
+    void averageConsumptionByMonth_shouldReturnAverageConsumption_whenExistingRoomId(){
+        String instantExpected = "2022-03-14T09:33:52";
+        LocalDateTime localDateTime = LocalDateTime.parse(instantExpected);
 
-        LocalDateTime day1 = LocalDateTime.now();
-        LocalDateTime day2 = day1.minusDays(1);
-        when(repository.getConsumptionsByIdRoom(1))
-                .thenReturn(List.of(
-                        new RoomConsumption(1,10., day1),
-                        new RoomConsumption(1, 6., day1),
-                        new RoomConsumption(1, 12., day2)));
+        LocalDateTime day1month1 = LocalDateTime.now().minusHours(2);
+        LocalDateTime day2month1 = LocalDateTime.now().minusDays(2);
+        LocalDateTime day1month2 = LocalDateTime.now().minusMonths(2);
 
-        List<RoomConsumption> expected = List.of(
-                new RoomConsumption(1,8., day1),
-                new RoomConsumption(1, 12., day2));
+        try (MockedStatic<LocalDateTime> mockedLocalDateTime = Mockito.mockStatic(LocalDateTime.class)) {
+            mockedLocalDateTime.when(LocalDateTime::now).thenReturn(localDateTime);
 
-        List<RoomConsumption> actualConsumptionAverage = roomService.dailyAverageConsumptionByIdRoom(1);
+            when(repository.getAllConsumptionsSince(localDateTime.minusMonths(10)))
+                    .thenReturn(List.of(
+                            new RoomConsumption(1,10., day1month1),
+                            new RoomConsumption(1, 30., day2month1),
+                            new RoomConsumption(1, 6., day1month2),
+                            new RoomConsumption(2, 12., day1month1),
+                            new RoomConsumption(2, 14., day1month2)));
 
-        assertThat(actualConsumptionAverage).usingRecursiveComparison().isEqualTo(expected);
+            List<RoomConsumption> expected = List.of(
+                    new RoomConsumption(1,20., day1month1),
+                    new RoomConsumption(1, 6., day1month2),
+                    new RoomConsumption(2, 12., day1month1),
+                    new RoomConsumption(2, 14., day1month2));
+
+            List<RoomConsumption> actualConsumptionAverage = roomService.roomsMonthConsumptionAverage();
+
+            assertThat(actualConsumptionAverage)
+                    .containsAll(expected)
+                    .hasSize(4);
+        }
     }
+
 
 }
