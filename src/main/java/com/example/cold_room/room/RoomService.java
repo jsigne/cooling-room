@@ -56,8 +56,8 @@ public class RoomService {
 
     public List<Cooling> getAlertRooms(){
         LocalDateTime maxTimestamp = LocalDateTime.now().minusHours(MAX_HOURS);
-        List<Integer> alertRoomIds = coolingRepository.getRoomInAlert();
-        return coolingRepository.getAllLastEntryInAlert(alertRoomIds, maxTimestamp);
+        List<Integer> alertRoomIds = coolingRepository.getRoomIdsInAlert();
+        return coolingRepository.getByRoomIdsSince(alertRoomIds, maxTimestamp);
     }
 
     public List<RoomTemperature> dailyAverageTemperatureByIdRoom(Integer id){

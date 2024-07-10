@@ -52,13 +52,13 @@ class RoomServiceTest {
                 new Cooling(2, 1, true, -21., 10., localDateTime)
         );
 
-        when(repository.getRoomInAlert()).thenReturn(List.of(1));
+        when(repository.getRoomIdsInAlert()).thenReturn(List.of(1));
 
 
         try (MockedStatic<LocalDateTime> mockedLocalDateTime = Mockito.mockStatic(LocalDateTime.class)) {
             mockedLocalDateTime.when(LocalDateTime::now).thenReturn(localDateTime);
 
-            when(repository.getAllLastEntryInAlert(List.of(1), localDateTime.minusHours(5)))
+            when(repository.getByRoomIdsSince(List.of(1), localDateTime.minusHours(5)))
                     .thenReturn(expected);
             // When
             List<Cooling> actual = roomService.getAlertRooms();

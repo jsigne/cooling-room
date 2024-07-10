@@ -42,12 +42,12 @@ public interface CoolingRepository extends JpaRepository<Cooling, Integer> {
             WHERE cooling.messageDate in
             (SELECT max(cooling.messageDate) FROM Cooling cooling GROUP BY cooling.idRoom)
             """)
-    List<Integer> getRoomInAlert();
+    List<Integer> getRoomIdsInAlert();
 
     @Query("""
             SELECT cooling FROM Cooling cooling
             WHERE cooling.idRoom IN (:alertRoomIds)
             AND cooling.messageDate > :maxTimestamp
             """)
-    List<Cooling> getAllLastEntryInAlert(List<Integer> alertRoomIds, LocalDateTime maxTimestamp);
+    List<Cooling> getByRoomIdsSince(List<Integer> alertRoomIds, LocalDateTime maxTimestamp);
 }
