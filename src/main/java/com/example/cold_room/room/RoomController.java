@@ -22,6 +22,11 @@ public class RoomController {
         return roomService.getRooms();
     }
 
+    @GetMapping("/rooms/consumption/average/month")
+    public List<RoomConsumption> roomsMonthConsumptionAverage(){
+        return roomService.roomsMonthConsumptionAverage();
+    }
+
     @GetMapping("/roomalert/last-data")
     public List<Cooling> roomAlert(){
         return roomService.getAlertRooms();

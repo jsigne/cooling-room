@@ -14,6 +14,9 @@ import java.util.List;
 @Repository
 public interface CoolingRepository extends JpaRepository<Cooling, Integer> {
 
+    @Query("SELECT new com.example.cold_room.model.RoomConsumption(c.idRoom, c.consumption, c.messageDate) FROM Cooling c WHERE c.messageDate > :maxTimestamp")
+    List<RoomConsumption> getAllConsumptionsSince(LocalDateTime maxTimestamp);
+
     @Query("SELECT new com.example.cold_room.model.RoomTemperature(c.idRoom, c.temperature, c.messageDate) FROM Cooling c WHERE c.idRoom = :idRoom")
     List<RoomTemperature> getTemperaturesByIdRoom(Integer idRoom);
 

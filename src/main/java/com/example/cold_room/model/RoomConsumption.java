@@ -1,13 +1,11 @@
 package com.example.cold_room.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 public class RoomConsumption {
     private Integer idRoom;
