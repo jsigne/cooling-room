@@ -1,12 +1,16 @@
 package com.example.cold_room.room;
 
 import com.example.cold_room.model.Cooling;
+import com.example.cold_room.model.Room;
+import com.example.cold_room.model.RoomConsumption;
+import com.example.cold_room.model.RoomTemperature;
 import com.example.cold_room.repository.CoolingRepository;
-import com.example.cold_room.room.response.Room;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
@@ -38,17 +42,30 @@ class RoomServiceTest {
     }
 
     @Test
-    void getAlertRooms_shouldReturnRoomLastData(){
+    void getAlertRooms_shouldReturnRoomLastData() {
+        // Given
+        String instantExpected = "2022-03-14T09:33:52";
+        LocalDateTime localDateTime = LocalDateTime.parse(instantExpected);
+
         List<Cooling> expected = List.of(
-                new Cooling(1,1, true, -35., 10., LocalDateTime.now()),
-                new Cooling(2,2, true, -21., 10., LocalDateTime.now())
+                new Cooling(1, 1, true, -35., 10., localDateTime),
+                new Cooling(2, 1, true, -21., 10., localDateTime)
         );
-        when(repository.getAllLastEntryInAlert())
-                .thenReturn(expected);
 
-        List<Cooling> actual = roomService.getAlertRooms();
+        when(repository.getRoomInAlert()).thenReturn(List.of(1));
 
-        assertThat(actual).isEqualTo(expected);
+
+        try (MockedStatic<LocalDateTime> mockedLocalDateTime = Mockito.mockStatic(LocalDateTime.class)) {
+            mockedLocalDateTime.when(LocalDateTime::now).thenReturn(localDateTime);
+
+            when(repository.getAllLastEntryInAlert(List.of(1), localDateTime.minusHours(5)))
+                    .thenReturn(expected);
+            // When
+            List<Cooling> actual = roomService.getAlertRooms();
+
+            // Then
+            assertThat(actual).isEqualTo(expected);
+        }
     }
 
     @Test
@@ -90,5 +107,6 @@ class RoomServiceTest {
 
         assertThat(actualConsumptionAverage).usingRecursiveComparison().isEqualTo(expected);
     }
+
 
 }

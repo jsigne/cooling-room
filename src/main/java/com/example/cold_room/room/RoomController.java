@@ -1,7 +1,9 @@
 package com.example.cold_room.room;
 
 import com.example.cold_room.model.Cooling;
-import com.example.cold_room.room.response.Room;
+import com.example.cold_room.model.Room;
+import com.example.cold_room.model.RoomConsumption;
+import com.example.cold_room.model.RoomTemperature;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,7 @@ public class RoomController {
         return roomService.getRooms();
     }
 
-    @GetMapping("/roomalert")
+    @GetMapping("/roomalert/last-data")
     public List<Cooling> roomAlert(){
         return roomService.getAlertRooms();
     }

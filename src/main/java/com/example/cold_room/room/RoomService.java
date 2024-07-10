@@ -1,12 +1,15 @@
 package com.example.cold_room.room;
 
 import com.example.cold_room.model.Cooling;
+import com.example.cold_room.model.Room;
+import com.example.cold_room.model.RoomConsumption;
+import com.example.cold_room.model.RoomTemperature;
 import com.example.cold_room.repository.CoolingRepository;
-import com.example.cold_room.room.response.Room;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,15 +20,17 @@ import static java.util.stream.Collectors.groupingBy;
 @RequiredArgsConstructor
 public class RoomService {
 
+    public static final int MAX_HOURS = 5;
     private final CoolingRepository coolingRepository;
-
 
     public List<Room> getRooms(){
         return coolingRepository.getAllLastEntry();
     }
 
     public List<Cooling> getAlertRooms(){
-        return coolingRepository.getAllLastEntryInAlert();
+        LocalDateTime maxTimestamp = LocalDateTime.now().minusHours(MAX_HOURS);
+        List<Integer> alertRoomIds = coolingRepository.getRoomInAlert();
+        return coolingRepository.getAllLastEntryInAlert(alertRoomIds, maxTimestamp);
     }
 
     public List<RoomTemperature> dailyAverageTemperatureByIdRoom(Integer id){
