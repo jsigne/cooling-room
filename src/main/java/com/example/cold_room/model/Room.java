@@ -1,4 +1,4 @@
-package com.example.cold_room.room.response;
+package com.example.cold_room.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
